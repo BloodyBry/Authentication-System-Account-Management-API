@@ -1,59 +1,147 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Authentication System & Account Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Project Overview
 
-## About Laravel
+This project is a RESTful API built with Laravel that provides a complete authentication and account management system.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The API allows users to:
+- Create an account
+- Log in and receive an authentication token
+- Access protected routes
+- Update their profile
+- Change their password
+- Log out
+- Delete their account
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Authentication is implemented using **Laravel Sanctum** with token-based authentication.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The API is designed to be tested only through **Postman** (no frontend interface).
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+# Technologies Used
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Laravel
+- Laravel Sanctum
+- MySQL
+- Postman
+- REST API architecture
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Installation
 
-### Premium Partners
+## 1. Clone the repository
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+git clone https://github.com/YOUR_USERNAME/Authentication-System-Account-Management-API.git
+cd Authentication-System-Account-Management-API
+```
 
-## Contributing
+## 2. Install dependencies
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer install
+```
 
-## Code of Conduct
+## 3. Create environment file
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+## 4. Configure database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Edit `.env` file and update database credentials:
 
-## License
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=auth_api
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 5. Generate application key
+
+```bash
+php artisan key:generate
+```
+
+## 6. Run migrations
+
+```bash
+php artisan migrate
+```
+
+This will create the required database tables including the `users` table.
+
+## 7. Install Sanctum
+
+```bash
+composer require laravel/sanctum
+```
+
+Publish Sanctum configuration:
+
+```bash
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+```
+
+Run migrations again:
+
+```bash
+php artisan migrate
+```
+
+## 8. Run the application
+
+```bash
+php artisan serve
+```
+
+The API will be available at:
+
+```
+http://127.0.0.1:8000
+```
+
+## API Documentation
+
+The API can be tested using the provided Postman collection.
+
+Steps:
+
+1. Import the Postman collection located in `/docs`.
+2. Run the Laravel server:
+
+php artisan serve
+
+3. Test the endpoints in the following order:
+
+POST /api/register
+POST /api/login
+GET /api/me
+PUT /api/me
+PUT /api/me/password
+POST /api/logout
+DELETE /api/me
+
+Authentication uses Laravel Sanctum tokens.
+
+For protected routes, include the header:
+
+Authorization: Bearer YOUR_TOKEN
+
+
+## Test Scenario
+
+1. POST /api/register → create account
+2. POST /api/login → retrieve token
+3. GET /api/me without token → Unauthorized
+4. GET /api/me with token → success
+5. PUT /api/me → update profile
+6. PUT /api/me/password → change password
+7. POST /api/logout → logout
+8. GET /api/me with old token → Unauthorized
